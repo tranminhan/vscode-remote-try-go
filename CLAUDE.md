@@ -42,10 +42,11 @@ This is a sample Go development container project demonstrating VS Code Dev Cont
 - **Module**: `github.com/microsoft/vscode-remote-try-go` (Go 1.19+)
 
 ### Dev Container Setup
-- **Base image**: `mcr.microsoft.com/devcontainers/go:1-1.22-bookworm`
+- **Custom Dockerfile**: `.devcontainer/Dockerfile` based on `mcr.microsoft.com/devcontainers/go:1-1.22-bookworm`
 - **Port forwarding**: Port 9000 automatically forwarded with label "Hello Remote World"
 - **Extensions**: Code Spell Checker pre-installed
-- **Go tools**: gopls and Go extension available via image labels
+- **Go tools**: gopls and Go extension available via base image
+- **Customization**: Add packages or tools by modifying the Dockerfile
 
 ## Development Workflow
 
@@ -58,3 +59,4 @@ The project is designed for:
 - `server.go:16-18`: HTTP handler function
 - `hello/hello.go:20-22`: Hello function implementation
 - `.devcontainer/devcontainer.json:27-31`: Port configuration and container settings
+- `.devcontainer/Dockerfile`: Container image customization (packages, tools, environment)
