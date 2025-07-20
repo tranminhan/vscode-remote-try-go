@@ -18,9 +18,15 @@ RUN mkdir -p /go/pkg/mod && \
 ENV GOCACHE=/tmp/go-cache
 ENV GOMODCACHE=/go/pkg/mod
 
+# Switch to vscode user for Go operations
+USER vscode
+
 # Install additional Go tools for database and cache integration
 # Use specific versions compatible with Go 1.22
 RUN go install github.com/pressly/goose/v3/cmd/goose@v3.15.1
+
+# Switch back to root for any final operations
+USER root
 
 # This Dockerfile now includes tools for working with PostgreSQL and Redis.
 # Additional customizations can be added here, such as:
