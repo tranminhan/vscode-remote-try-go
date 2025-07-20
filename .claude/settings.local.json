@@ -6,7 +6,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "WebFetch(domain:containers.dev)"
+      "WebFetch(domain:containers.dev)",
+      "Bash(go mod:*)",
+      "Bash(go build:*)"
     ],
     "deny": []
   }
