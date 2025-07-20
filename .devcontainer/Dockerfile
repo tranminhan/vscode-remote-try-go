@@ -7,8 +7,16 @@ RUN apt-get update && apt-get install -y \
     redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
-# Fix Go module cache permissions
-RUN mkdir -p /go/pkg/mod/cache && chmod -R 777 /go/pkg/mod
+# Fix Go module cache permissions - create and set ownership for vscode user
+RUN mkdir -p /go/pkg/mod && \
+    mkdir -p /go/pkg/sumdb && \
+    mkdir -p /tmp/go-cache && \
+    chown -R vscode:vscode /go/pkg && \
+    chown -R vscode:vscode /tmp/go-cache
+
+# Set Go environment variables for proper cache handling
+ENV GOCACHE=/tmp/go-cache
+ENV GOMODCACHE=/go/pkg/mod
 
 # Install additional Go tools for database and cache integration
 # Use specific versions compatible with Go 1.22
