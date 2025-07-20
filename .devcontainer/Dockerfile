@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
     redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
+# Fix Go module cache permissions
+RUN mkdir -p /go/pkg/mod/cache && chmod -R 777 /go/pkg/mod
+
 # Install additional Go tools for database and cache integration
 # Use specific versions compatible with Go 1.22
 RUN go install github.com/pressly/goose/v3/cmd/goose@v3.15.1
