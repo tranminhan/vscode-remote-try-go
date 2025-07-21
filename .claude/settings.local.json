@@ -8,7 +8,8 @@
       "Bash(git push:*)",
       "WebFetch(domain:containers.dev)",
       "Bash(go mod:*)",
-      "Bash(go build:*)"
+      "Bash(go build:*)",
+      "Bash(python3:*)"
     ],
     "deny": []
   }

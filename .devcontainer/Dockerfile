@@ -28,7 +28,19 @@ RUN go install github.com/pressly/goose/v3/cmd/goose@v3.15.1
 # Switch back to root for any final operations
 USER root
 
-# This Dockerfile now includes tools for working with PostgreSQL and Redis.
+# Install additional tools for Claude Code support
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    unzip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Ensure proper permissions for Claude Code installation
+RUN mkdir -p /home/vscode/.local/bin && \
+    chown -R vscode:vscode /home/vscode/.local
+
+# This Dockerfile now includes tools for working with PostgreSQL, Redis, and Claude Code.
 # Additional customizations can be added here, such as:
 # - Additional system packages via apt-get
 # - Custom Go tools or utilities
