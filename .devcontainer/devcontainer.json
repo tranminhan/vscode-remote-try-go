@@ -52,7 +52,7 @@
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	 "forwardPorts": [9000],
+	 "forwardPorts": [9000, 54545],
 
 	// Use 'portsAttributes' to set default properties for specific forwarded ports.
 	// More info: https://containers.dev/implementors/json_reference/#port-attributes
@@ -60,6 +60,10 @@
 		"9000": {
 			"label": "Hello Remote World",
 			"onAutoForward": "notify"
+		},
+		"54545": {
+			"label": "Claude Code OAuth",
+			"onAutoForward": "silent"
 		}
 	},
 
