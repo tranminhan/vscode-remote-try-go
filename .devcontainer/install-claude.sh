@@ -57,4 +57,24 @@ if [ -n "$BASH_VERSION" ]; then
     echo 'export HISTFILESIZE=10000' >> ~/.bashrc
 fi
 
+# Configure Claude Code for VS Code integration
+if command -v claude &> /dev/null; then
+    echo "Configuring Claude Code for VS Code integration..."
+    
+    # Show available configuration options (for debugging)
+    echo "Available Claude Code configuration options:"
+    claude config --help || true
+    
+    # The VS Code extension handles most configuration automatically
+    # No manual configuration needed for diff_tool
+    
+    echo "Claude Code VS Code integration ready!"
+    echo "You can access Claude Code via:"
+    echo "  - Command: 'claude' in terminal"
+    echo "  - VS Code: Click Claude icon in activity bar or press Cmd+ESC (Mac) / Ctrl+ESC (Windows/Linux)"
+    echo "  - VS Code extension will automatically handle IDE integration features"
+else
+    echo "Claude Code CLI not found. VS Code extension may auto-install it when launched."
+fi
+
 echo "Claude Code installation and development environment setup completed."
