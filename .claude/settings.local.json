@@ -10,7 +10,8 @@
       "Bash(go mod:*)",
       "Bash(go build:*)",
       "Bash(python3:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(go test:*)"
     ],
     "deny": []
   }
