@@ -9,7 +9,8 @@
       "WebFetch(domain:containers.dev)",
       "Bash(go mod:*)",
       "Bash(go build:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }
