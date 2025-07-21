@@ -35,4 +35,26 @@ else
     fi
 fi
 
-echo "Claude Code installation process completed."
+# Configure git-delta for enhanced git diff
+git config --global core.pager delta
+git config --global interactive.diffFilter "delta --color-only"
+git config --global delta.navigate true
+git config --global delta.light false
+git config --global merge.conflictstyle diff3
+git config --global diff.colorMoved default
+
+# Create history directory and configure shell history persistence
+mkdir -p ~/.history
+if [ -n "$ZSH_VERSION" ]; then
+    echo 'export HISTFILE=~/.history/.zsh_history' >> ~/.zshrc
+    echo 'export HISTSIZE=10000' >> ~/.zshrc
+    echo 'export SAVEHIST=10000' >> ~/.zshrc
+fi
+
+if [ -n "$BASH_VERSION" ]; then
+    echo 'export HISTFILE=~/.history/.bash_history' >> ~/.bashrc
+    echo 'export HISTSIZE=10000' >> ~/.bashrc
+    echo 'export HISTFILESIZE=10000' >> ~/.bashrc
+fi
+
+echo "Claude Code installation and development environment setup completed."

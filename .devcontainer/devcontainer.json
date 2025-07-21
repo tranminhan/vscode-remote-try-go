@@ -23,9 +23,29 @@
 	"customizations": {
 		// Configure properties specific to VS Code.
 		"vscode": {
-			"settings": {},
+			"settings": {
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.fixAll.eslint": "explicit",
+					"source.organizeImports": "explicit"
+				},
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"go.formatTool": "goimports",
+				"go.lintTool": "golangci-lint",
+				"go.testFlags": ["-v"],
+				"editor.rulers": [80, 120],
+				"files.trimTrailingWhitespace": true,
+				"files.insertFinalNewline": true
+			},
 			"extensions": [
-				"streetsidesoftware.code-spell-checker"
+				"golang.go",
+				"ms-vscode.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"eamodio.gitlens",
+				"streetsidesoftware.code-spell-checker",
+				"ms-vscode.vscode-json",
+				"redhat.vscode-yaml",
+				"ms-azuretools.vscode-docker"
 			]
 		}
 	},
@@ -41,6 +61,13 @@
 			"onAutoForward": "notify"
 		}
 	},
+
+	// Persistent volumes for development data
+	"mounts": [
+		"source=${devcontainerId}-history,target=/home/vscode/.history,type=volume",
+		"source=${devcontainerId}-config,target=/home/vscode/.config,type=volume",
+		"source=${devcontainerId}-go-cache,target=/tmp/go-cache,type=volume"
+	],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": ".devcontainer/install-claude.sh"

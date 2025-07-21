@@ -28,13 +28,21 @@ RUN go install github.com/pressly/goose/v3/cmd/goose@v3.15.1
 # Switch back to root for any final operations
 USER root
 
-# Install additional tools for Claude Code support
+# Install additional tools for Claude Code support and enhanced git experience
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
     unzip \
     git \
+    fzf \
     && rm -rf /var/lib/apt/lists/*
+
+# Install git-delta for enhanced git diff visualization
+RUN DELTA_VERSION="0.16.5" && \
+    ARCH=$(dpkg --print-architecture) && \
+    wget "https://github.com/dandavison/delta/releases/download/${DELTA_VERSION}/git-delta_${DELTA_VERSION}_${ARCH}.deb" && \
+    dpkg -i "git-delta_${DELTA_VERSION}_${ARCH}.deb" && \
+    rm "git-delta_${DELTA_VERSION}_${ARCH}.deb"
 
 # Ensure proper permissions for Claude Code installation
 RUN mkdir -p /home/vscode/.local/bin && \
