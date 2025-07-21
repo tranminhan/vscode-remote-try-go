@@ -57,16 +57,91 @@ if [ -n "$BASH_VERSION" ]; then
     echo 'export HISTFILESIZE=10000' >> ~/.bashrc
 fi
 
-# Configure Claude Code for VS Code integration
+# Handle OAuth port conflicts before configuring Claude Code
+echo "Checking for OAuth port conflicts..."
+
+# Check if port 54545 is in use (Claude Code's OAuth port)
+if command -v netstat &> /dev/null; then
+    if netstat -ln 2>/dev/null | grep -q ":54545 "; then
+        echo "⚠️ WARNING: Port 54545 is already in use!"
+        echo "This may cause OAuth authentication issues with Claude Code."
+        
+        # Try to identify what's using the port
+        port_user=$(netstat -lnp 2>/dev/null | grep ":54545 " | head -1)
+        if [ -n "$port_user" ]; then
+            echo "Port 54545 is being used by: $port_user"
+        fi
+        
+        echo "Potential solutions:"
+        echo "  1. Use API key authentication instead of OAuth (recommended for Codespaces)"
+        echo "  2. Kill the process using port 54545 if safe to do so"
+        echo "  3. Restart the Codespace if the conflict persists"
+    else
+        echo "✅ Port 54545 is available for OAuth authentication"
+    fi
+elif command -v lsof &> /dev/null; then
+    if lsof -i :54545 &>/dev/null; then
+        echo "⚠️ WARNING: Port 54545 is already in use!"
+        echo "Process using port 54545:"
+        lsof -i :54545 2>/dev/null || echo "Could not determine process"
+    else
+        echo "✅ Port 54545 is available for OAuth authentication"
+    fi
+else
+    echo "⚠️ Cannot check port status (netstat/lsof not available)"
+fi
+
+# Configure Claude Code authentication and VS Code integration
 if command -v claude &> /dev/null; then
-    echo "Configuring Claude Code for VS Code integration..."
+    echo "Configuring Claude Code authentication and VS Code integration..."
     
-    # Show available configuration options (for debugging)
-    echo "Available Claude Code configuration options:"
-    claude config --help || true
+    # Check for authentication credentials
+    auth_configured=false
     
-    # The VS Code extension handles most configuration automatically
-    # No manual configuration needed for diff_tool
+    if [ -n "$ANTHROPIC_API_KEY" ]; then
+        echo "✅ ANTHROPIC_API_KEY found - Claude Code will use API key authentication"
+        echo "   (This bypasses OAuth and avoids port 54545 conflicts)"
+        export ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY"
+        auth_configured=true
+    fi
+    
+    if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+        echo "✅ CLAUDE_CODE_OAUTH_TOKEN found - Claude Code will use OAuth token authentication"
+        export CLAUDE_CODE_OAUTH_TOKEN="$CLAUDE_CODE_OAUTH_TOKEN"
+        auth_configured=true
+    fi
+    
+    if [ "$auth_configured" = true ]; then
+        echo "🔐 Claude Code authentication configured successfully!"
+        
+        # Test authentication by checking status
+        echo "Testing Claude Code authentication..."
+        if claude auth status &>/dev/null; then
+            echo "✅ Authentication test successful!"
+        else
+            echo "⚠️ Authentication configured but test failed - Claude Code will attempt to authenticate on first use"
+        fi
+    else
+        echo "⚠️ No Claude Code authentication credentials found."
+        echo ""
+        echo "🚨 IMPORTANT: Due to OAuth port conflicts in Codespaces, API key authentication is recommended!"
+        echo ""
+        echo "To set up automatic authentication in GitHub Codespaces:"
+        echo "  1. Get your API key (RECOMMENDED):"
+        echo "     - Visit: https://console.anthropic.com/"
+        echo "     - Create an API key"
+        echo "     - Add as secret: ANTHROPIC_API_KEY"
+        echo ""
+        echo "  2. Alternative - OAuth Token (may have port conflicts):"
+        echo "     - Run locally: claude setup-token"
+        echo "     - Add as secret: CLAUDE_CODE_OAUTH_TOKEN"
+        echo ""
+        echo "  3. Configure GitHub Codespaces secrets:"
+        echo "     - Go to repository → Settings → Secrets → Codespaces"
+        echo "     - Add your chosen secret"
+        echo "     - Rebuild the Codespace"
+        echo ""
+    fi
     
     echo "Claude Code VS Code integration ready!"
     echo "You can access Claude Code via:"

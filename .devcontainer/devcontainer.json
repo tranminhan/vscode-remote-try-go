@@ -63,6 +63,12 @@
 		}
 	},
 
+	// Environment variables for Claude Code authentication
+	"remoteEnv": {
+		"ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
+		"CLAUDE_CODE_OAUTH_TOKEN": "${localEnv:CLAUDE_CODE_OAUTH_TOKEN}"
+	},
+
 	// Persistent volumes for development data
 	"mounts": [
 		"source=${devcontainerId}-history,target=/home/vscode/.history,type=volume",
